@@ -40,7 +40,7 @@ class Shop:
         return products_sum_price
 
     @staticmethod
-    def format_amount(amount: any) -> str:
-        if amount.is_integer():
-            return f"{int(amount)}"
-        return f"{amount}"
+    def format_amount(amount: float) -> str:
+        amount_str = f"{amount:.2f}".strip("0").strip(".")
+
+        return amount_str
