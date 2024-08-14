@@ -41,6 +41,6 @@ class Shop:
 
     @staticmethod
     def format_amount(amount: float) -> str:
-        amount_str = f"{amount: .2f}".strip("0").strip(".")
+        amount_str = "{:.2f}".format(amount).rstrip("0").rstrip(".")
 
         return amount_str
