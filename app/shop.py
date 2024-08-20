@@ -1,4 +1,3 @@
-from app.data import Data
 import datetime
 
 
@@ -11,8 +10,8 @@ class Shop:
         self.products = data.get("products")
 
     @classmethod
-    def generate_shop(cls) -> None:
-        for shop in Data.data["shops"]:
+    def generate_shop(cls, data: dict) -> None:
+        for shop in data["shops"]:
             store = Shop(**shop)
             cls.shop_list.append(store)
 

@@ -1,7 +1,7 @@
 import math
+from decimal import Decimal
 
 from app.car import Car
-from app.data import Data
 from app.shop import Shop
 
 
@@ -14,31 +14,36 @@ class Customer:
         self.name = data.get("name")
         self.product_cart = data.get("product_cart")
         self.location = data.get("location")
-        self.money = data.get("money")
+        self.money = Decimal(data.get("money"))
         self.car = Car(
             data.get("car").get("brand"),
             data.get("car").get("fuel_consumption"))
 
-    def calculate_cost(self, shop: Shop) -> float:
-        x, y = self.location
-        x1, y1 = shop.location
-        distance = math.sqrt(((x1 - x) ** 2) + ((y1 - y) ** 2))
+    def calculate_cost(self, shop: Shop, data: dict) -> Decimal:
+        x_coordinate, y_coordinate = self.location
+        x1_coordinate, y1_coordinate = shop.location
+        distance = Decimal(math.sqrt(
+            ((x1_coordinate - x_coordinate) ** 2)
+            + ((y1_coordinate - y_coordinate) ** 2)
+        ))
 
         car_cost_there_and_back = (
             (
-                (self.car.fuel_consumption * distance) / 100
+                (Decimal(self.car.fuel_consumption) * distance) / Decimal(100)
             )
-            * Data.data["FUEL_PRICE"] * 2
+            * Decimal(data["FUEL_PRICE"]) * 2
         )
-        products_sum_price = 0
+        products_sum_price = Decimal(0)
         for product, count in self.product_cart.items():
-            products_sum_price += shop.products.get(product, 0) * count
+            products_sum_price += Decimal(
+                shop.products.get(product, 0)
+            ) * count
 
         return round((car_cost_there_and_back + products_sum_price), 2)
 
     @classmethod
-    def generate_unit(cls) -> None:
-        for unit in Data.data["customers"]:
+    def generate_unit(cls, data: dict) -> None:
+        for unit in data["customers"]:
             customer = Customer(**unit)
             cls.group_customers.append(customer)
 
